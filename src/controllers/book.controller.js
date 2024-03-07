@@ -94,11 +94,55 @@ export const updateBookById = async (req, res) => {
                 date: bookUpdated
             }
         )
-    }catch (error) {
+    } catch (error) {
         res.status(500).json(
             {
                 success: false,
                 message: "book can retrieved",
+                error: error.message
+            }
+        )
+    }
+}
+
+export const deleteBook = async (req, res) => {
+    try {
+        const { title } = req.body
+        const bookId = req.params.id
+
+        if (!title) {
+            return res.status(400).json(
+                {
+                    success: false,
+                    message: "title required"
+                }
+            )
+        }
+
+        const isDeleteBook = await Book.deleteOne(
+            {
+                _id: bookId
+            },
+            {
+                title: title
+            },
+            {
+                delete: true
+            }
+        )
+        res.status(200).json(
+            {
+                success: true,
+                message: "book delete successfully",
+                data: isDeleteBook
+            }
+        )
+
+    }catch(error) {
+        res.status(500).json(
+            {
+                success: false,
+                message: "boon cant deleted",
                 error: error.message
             }
         )
